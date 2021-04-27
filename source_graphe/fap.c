@@ -33,7 +33,7 @@ fap inserer(fap f, pgraphe_t element, float priorite) {
     return f;
 }
 
-fap extraire_tete(fap f, pgraphe_t* element, float *priorite) {
+fap extraire(fap f, pgraphe_t* element, float *priorite) {
     fap courant;
 
     /* extraire le premier element si la fap n'est pas vide */
@@ -47,23 +47,23 @@ fap extraire_tete(fap f, pgraphe_t* element, float *priorite) {
     return f;
 }
 
-fap extraire_label(fap f, pgraphe_t* element, float *priorite, int label) {
-    if(est_fap_vide(f))
-        return f;
-    if(f->element->label == label)
-        f = extraire(f,element,priorite);
-    fap courant = f->prochain;
+// fap extraire_label(fap f, pgraphe_t* element, float *priorite, int label) {
+//     if(est_fap_vide(f))
+//         return f;
+//     if(f->element->label == label)
+//         f = extraire(f,element,priorite);
+//     fap courant = f->prochain;
 
-    while(courant->prochain != NULL && courant->prochain->element->label != label) {
-        courant = courant->prochain;
-    }
-    if(courant->prochain != NULL && courant->prochain->element->label == label) {
-        *element = courant->element;
-        *priorite = courant->priorite;
-        courant->prochain = courant->prochain->prochain;
-    }
-    return f;
-}
+//     while(courant->prochain != NULL && courant->prochain->element->label != label) {
+//         courant = courant->prochain;
+//     }
+//     if(courant->prochain != NULL && courant->prochain->element->label == label) {
+//         *element = courant->element;
+//         *priorite = courant->priorite;
+//         courant->prochain = courant->prochain->prochain;
+//     }
+//     return f;
+// }
 
 int est_fap_vide(fap f) { return f == NULL; }
 

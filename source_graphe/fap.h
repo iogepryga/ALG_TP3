@@ -39,9 +39,7 @@ fap inserer(fap f, pgraphe_t element, float priorite);
    effets de bord : libere de la memoire change les valeurs point�es par les
                     adresses pass�es en param�tre
 */
-fap extraire_tete(fap f, pgraphe_t *element, float *priorite);
-
-fap extraire_label(fap f, pgraphe_t *element, float *priorite , int label);
+fap extraire(fap f, pgraphe_t *element, float *priorite);
 
 /*
    est_fap_vide

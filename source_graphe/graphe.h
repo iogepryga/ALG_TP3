@@ -1,5 +1,7 @@
 
-typedef struct a *parc_t ;
+typedef enum {MIN,MAX} COMP;
+
+// typedef struct a *parc_t ;
 
 /*
   definition des types sommet et pointeur de sommet
@@ -12,7 +14,7 @@ typedef struct s
   parc_t     liste_arcs ; // arcs sortants du sommet
   struct s   *sommet_suivant ; // sommet suivant dans le graphe
   int        couleur ; // couleur du sommet
-  int        tmp;
+  int        tmp; // vouer a être utiliser uniquement dans un algo à la fois
 } sommet_t, *psommet_t ;
 
 /*
@@ -23,15 +25,14 @@ typedef struct s
 
 typedef struct a {
   
-                  int         poids ; // poids de l arc
-                  psommet_t   dest ;  // pointeur sommet destinataire
-                  struct a *  arc_suivant ; // arc suivant
-  
+  int         poids ; // poids de l arc
+  psommet_t   dest ;  // pointeur sommet destinataire
+  struct a *  arc_suivant ; // arc suivant
 } arc_t, *parc_t;
 
 typedef struct {
-    psommet_t depart;
-    parc_t liste_arcs;
+  psommet_t   depart;
+  parc_t      liste_arcs;
 } chemin_t , *pchemin_t ;
 
 /*
