@@ -1,8 +1,3 @@
-
-typedef enum {MIN,MAX} COMP;
-
-// typedef struct a *parc_t ;
-
 /*
   definition des types sommet et pointeur de sommet
   un graphe est constitué d'une liste de sommets
