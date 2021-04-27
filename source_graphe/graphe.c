@@ -206,7 +206,7 @@ void algo_dijkstra_rec (pgraphe_t g) {
       dist = g->couleur + arc_courant->poids;
       if(arc_courant->dest->couleur == -1 || arc_courant->dest->couleur > dist) {
         arc_courant->dest->couleur = dist;
-        afficher_graphe_profondeur_rec(arc_courant->dest);
+        algo_dijkstra_rec(arc_courant->dest);
       }
       arc_courant = arc_courant->arc_suivant;
     }
@@ -354,23 +354,79 @@ int simple(pgraphe_t g, chemin_t c) {
 }
 
 int eulerien(pgraphe_t g, chemin_t c) {
-
+  if(g == NULL)
+    return -1;
+  // chemin_t copy = c;
+  for(pgraphe_t g_courant = g ; g_courant->sommet_suivant != NULL ; g_courant = g_courant->sommet_suivant) {
+    for(parc_t arc_courant = g_courant->liste_arcs ; arc_courant != NULL ; arc_courant = arc_courant->arc_suivant) {
+      parc_t arc_chemin_courant = c.liste_arcs;
+      for(; arc_chemin_courant != NULL ; arc_chemin_courant = arc_chemin_courant->arc_suivant)
+        if(arc_courant == arc_chemin_courant)
+          break;
+      if(arc_chemin_courant == NULL ){
+        return 0;
+      }
+    }
+  }
+  return 1;
 }
 
 int hamiltonien(pgraphe_t g, chemin_t c) {
-
+  if(g == NULL)
+    return -1;
+  for(pgraphe_t g_courant = g ; g_courant->sommet_suivant != NULL ; g_courant = g_courant->sommet_suivant) {
+    parc_t arc_chemin_courant = c.liste_arcs;
+    for(pgraphe_t sommet_courant = c.depart; arc_chemin_courant != NULL ; sommet_courant = arc_chemin_courant->dest, arc_chemin_courant = arc_chemin_courant->arc_suivant)
+      if(g_courant == sommet_courant)
+        break;
+    if(arc_chemin_courant == NULL )
+      return 0;
+  }
+  return 1;
 }
 
 int graphe_eulerien(pgraphe_t g) {
-
+  
 }
 
 int graphe_hamiltonien(pgraphe_t g) {
 
 }
 
-int distance(pgraphe_t g, int x, int y) {
+int longueur(pgraphe_t g, chemin_t c) {
+  if(g == NULL)
+    return -1;
+  int somme = 0;
+  for(parc_t arc_courant = c.liste_arcs ; arc_courant != NULL ; arc_courant = arc_courant->arc_suivant)
+    somme += arc_courant->poids;
+    return somme;
+}
 
+// int distance_rec(pgraphe_t g, psommet_t actuel, psommet_t x, psommet_t y) {
+//   if (g == NULL || actuel == NULL || x == NULL | y == NULL)
+//     return -1;
+//   int min = INT_MAX;
+//   for(parc_t arc_courant = actuel->liste_arcs; arc_courant != NULL ; arc_courant = arc_courant->arc_suivant) {
+//     int tmp = distance_rec(g,arc_courant->dest,x,y);
+//     if(tmp < min) {
+//       min = tmp;
+//     }
+//   }
+  
+  
+// }
+
+int distance(pgraphe_t g, int x, int y) { // attention : destructeur couleur
+  if(g == NULL)
+    return -1;
+  pgraphe_t sommet_x = chercher_sommet(g,x);
+  pgraphe_t sommet_y = chercher_sommet(g,y);
+  if(sommet_x == NULL || sommet_y == NULL)
+    return -1;
+  // init_couleur_sommet(g,-1);
+  // return distance_rec(g,x,x,y);
+  algo_dijkstra(g,x);
+  return sommet_y->couleur;
 }
 
 int excentricite(pgraphe_t g, int n) {
