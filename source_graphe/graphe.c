@@ -273,31 +273,41 @@ void algo_dijkstra (pgraphe_t g, int r) {
   if ( indice != -1 )
     Tableau_dist_sommets[indice] = 0;
   
-  
+  // Tant que la file (tableau sommets utilisé comme file) est non vide
   while (!tableeau_est_vide(Tableau_sommets,nb_sommets)){
 
+    //vérification
     if (plus_petite_distance(Tableau_dist_sommets, nb_sommets, Tableau_sommets) == -1)
       break;
     
+    //init sommet étudié
+    //les distances étant init à INT_MAX, les sommets non encore parcouru ne sont pas pris en compte
+    //Au début on commence alors par le sommet de départ r qui a la seul distance < INT_MAX qui vaut 0 (init juste avant)
     g = Tableau_sommets[plus_petite_distance(Tableau_dist_sommets, nb_sommets, Tableau_sommets)];
 
+    //init variables utiles
     parc_t arc = g -> liste_arcs;
     int indice_sommet = indiceOff(Tableau_sommets, nb_sommets, g -> label);
     int indice_dest = indiceOff(Tableau_sommets, nb_sommets, arc -> dest -> label);
+    //Tant qu'on a pas fini d'explorer les sommets accessible depuis le sommet en cours d'étude
     while (arc != NULL){
-    
+      
+      //vérification
       if (indice_sommet == -1 || indice_dest == -1)
           break;
 
+      //Si distance du sommet destination supérieur à distance sommet étudier plus poids du parcours de l'arc  
       if ( Tableau_dist_sommets[indice_dest] > ( Tableau_dist_sommets[indice_sommet] + arc -> poids)){
+        //alors on actualise la nouvelle distance optimale du sommet destination
         Tableau_dist_sommets[indice_dest] = (Tableau_dist_sommets[indice_sommet] + arc -> poids);
         g -> tmp = Tableau_dist_sommets[indice_sommet] + arc -> poids;
         Parent[indice_dest] = g -> label;
       }
-      
+      //On passe à l'arc suivant
       arc = arc -> arc_suivant;
     }
-    
+    //On enlève de la pile le sommet qu'on a fini d'étudier
+    //Il ne sera donc plus pris en compte lors de l'appel à plus_petite_distance
     Tableau_sommets [indice_sommet] = NULL;
   }
 
@@ -348,6 +358,10 @@ int tableeau_est_vide (psommet_t* Tab, int len){
 }
 
 
+
+void Print_Dijkstra (pgraphe_t g){
+  return; // A FAIRE
+}
 
 // ======================================================================
 
