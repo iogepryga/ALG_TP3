@@ -310,8 +310,7 @@ void algo_dijkstra (pgraphe_t g, int r) {
     //Il ne sera donc plus pris en compte lors de l'appel à plus_petite_distance
     Tableau_sommets [indice_sommet] = NULL;
   }
-
-
+    free(Tableau_sommets);
 }
 //Fonctions pour algo de dijkstra
 int plus_petite_distance (int* Tab, int len, psommet_t* File){
@@ -339,7 +338,7 @@ int indiceOff (psommet_t* Tab,int len, int elem){
 }
 
 psommet_t* tableau_liste_sommets (pgraphe_t g){
-  psommet_t Tab[nombre_sommets (g)];
+  psommet_t* Tab = malloc(sizeof(psommet_t) * nombre_sommets (g));
   int i = 0;
   while (g != NULL){
     Tab[i] = g;
