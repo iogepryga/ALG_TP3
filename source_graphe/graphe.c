@@ -146,7 +146,7 @@ int colorier_graphe (pgraphe_t g) {
 
 // ======================================================================
 
-void afficher_graphe_largeur (pgraphe_t g, int r) {
+void afficher_graphe_largeur (pgraphe_t g, int r) { // attention modifie tmp
   /*
     afficher les sommets du graphe avec un parcours en largeur
   */
@@ -209,22 +209,15 @@ void afficher_graphe_largeur (pgraphe_t g, int r) {
   puts("");
 }
 
-
-
 void afficher_graphe_profondeur_rec (pgraphe_t g) {
   if(g != NULL) {
     g->tmp = 1;
-    parc_t arc_courant = g->liste_arcs;
-    while(arc_courant != NULL) {
+    for(parc_t arc_courant = g->liste_arcs;arc_courant != NULL;arc_courant = arc_courant->arc_suivant)
       if(arc_courant->dest->tmp == 0)
         afficher_graphe_profondeur_rec(arc_courant->dest);
-      arc_courant = arc_courant->arc_suivant;
-    }
     printf("%d ", g->label); // post fix
   }
 }
-
-
 void afficher_graphe_profondeur (pgraphe_t g, int r) {
   /*
     afficher les sommets du graphe avec un parcours en profondeur
@@ -357,8 +350,6 @@ int tableeau_est_vide (psommet_t* Tab, int len){
   return 1;
 }
 
-
-
 void Print_Dijkstra (pgraphe_t g){
   return; // A FAIRE
 }
@@ -418,7 +409,6 @@ int degre_maximal_graphe (pgraphe_t g) // sortant ou entrant ?!
   return max;
 }
 
-
 int degre_minimal_graphe (pgraphe_t g) // sortant ou entrant ?!
 {
   /*
@@ -434,7 +424,6 @@ int degre_minimal_graphe (pgraphe_t g) // sortant ou entrant ?!
 	}
   return min;
 }
-
 
 int independant (pgraphe_t g)
 {
@@ -512,7 +501,7 @@ void chemin_arc_remove_last(pchemin_t c) {
 
 int elementaire (pgraphe_t g, chemin_t c) {
   if(g == NULL)
-    return -1;
+    return 0;
   pgraphe_t g_courant = c.depart;
   for(parc_t arc_courant = c.liste_arcs ; arc_courant != NULL ;  g_courant = arc_courant->dest, arc_courant = arc_courant->arc_suivant )
     for(parc_t sub_arc_courant = arc_courant ; sub_arc_courant != NULL ; sub_arc_courant = sub_arc_courant->arc_suivant)
@@ -530,7 +519,7 @@ int elementaire (pgraphe_t g, chemin_t c) {
 
 int simple(pgraphe_t g, chemin_t c) {
   if(g == NULL)
-    return -1;
+    return 0;
   for(parc_t arc_courant = c.liste_arcs; arc_courant != NULL ; arc_courant = arc_courant->arc_suivant){
     for(parc_t sub_arc_courant = arc_courant->arc_suivant ; sub_arc_courant != NULL ; sub_arc_courant = sub_arc_courant->arc_suivant)
       if(sub_arc_courant == arc_courant)
@@ -539,51 +528,99 @@ int simple(pgraphe_t g, chemin_t c) {
   return 1;
 }
 
-int eulerien(pgraphe_t g, chemin_t c) { 
+int eulerien(pgraphe_t g, chemin_t c) {
   if(g == NULL)
-    return -1;
-  for(pgraphe_t g_courant = g ; g_courant->sommet_suivant != NULL ; g_courant = g_courant->sommet_suivant) {
+    return 0;
+  for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
     for(parc_t arc_sommet_courant = g_courant->liste_arcs ; arc_sommet_courant != NULL ; arc_sommet_courant = arc_sommet_courant->arc_suivant) {
 
-			pgraphe_t g_depart = c.depart ;
-      parc_t arc_chemin_courant = c.liste_arcs;
-      for(; arc_chemin_courant != NULL ; arc_chemin_courant = arc_chemin_courant->arc_suivant) {
+			pgraphe_t g_depart = c.depart;
+      int nb_occ = 0;
+      for(parc_t arc_chemin_courant = c.liste_arcs; arc_chemin_courant != NULL ; arc_chemin_courant = arc_chemin_courant->arc_suivant) {
         if(g_courant == g_depart && arc_sommet_courant->dest == arc_chemin_courant->dest)
-          break;
+          nb_occ++;
 				g_depart = arc_chemin_courant->dest;
 			}
-      if(arc_chemin_courant == NULL ){
+      if(nb_occ != 1)
         return 0;
-      }
-			
     }
   }
   return 1;
 }
 
-int hamiltonien(pgraphe_t g, chemin_t c) {
+int hamiltonien(pgraphe_t g, chemin_t c) {  // attention : modifie tmp
   if(g == NULL)
-    return -1;
-  for(pgraphe_t g_courant = g ; g_courant->sommet_suivant != NULL ; g_courant = g_courant->sommet_suivant) {
-    parc_t arc_chemin_courant = c.liste_arcs;
-    for(pgraphe_t sommet_courant = c.depart; arc_chemin_courant != NULL ; sommet_courant = arc_chemin_courant->dest, arc_chemin_courant = arc_chemin_courant->arc_suivant)
-      if(g_courant == sommet_courant)
-        break;
-    if(arc_chemin_courant == NULL )
+    return 0;
+  // version destructrice de tmp :
+  init_champ_tmp_sommet(g,0);
+  if(c.depart != NULL)
+    c.depart++;
+  for(parc_t arc_chemin_courant = c.liste_arcs; arc_chemin_courant != NULL ; arc_chemin_courant = arc_chemin_courant->arc_suivant)
+    arc_chemin_courant->dest->tmp++;
+  for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant)
+    if(g_courant->tmp != 1)
       return 0;
-  }
   return 1;
 }
 
-
+int graphe_eulerien_rec(pgraphe_t g,psommet_t actuel,pchemin_t c) {  // A verif
+  if(g == NULL || actuel == NULL)
+    return 0;
+  for(parc_t arc_courant = actuel->liste_arcs ; arc_courant != NULL ; arc_courant = arc_courant->arc_suivant) {
+    chemin_arc_push(c,*arc_courant);
+    if(simple(g,*c)) {
+      if(graphe_eulerien_rec(g,arc_courant->dest,c))
+        return 1;
+    }
+    chemin_arc_remove_last(c);
+  }
+  if(eulerien(g,*c)) {
+    return 1;
+  }
+  return 0;
+}
 int graphe_eulerien(pgraphe_t g) {
-
+  if(g == NULL)
+    return 0;
+  // init_couleur_sommet(g,0);
+  for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
+    chemin_t c; c.depart = g_courant;c.liste_arcs = NULL;
+    if(graphe_eulerien_rec(g,g_courant,&c))
+      return 1; // et c contient le chemin hamiltonien trouvé
+  }
+  return 0;
 }
 
-int graphe_hamiltonien(pgraphe_t g) {
 
+int graphe_hamiltonien_rec(pgraphe_t g, psommet_t actuel, pchemin_t c) {  // modifie couleur et tmp
+  if(g == NULL || actuel == NULL)
+    return 0;
+  actuel->couleur = 1;
+  for(parc_t arc_courant = actuel->liste_arcs ; arc_courant != NULL ; arc_courant = arc_courant->arc_suivant) {
+    if(arc_courant->dest->couleur == 0) {
+      chemin_arc_push(c,*arc_courant);
+      if(graphe_hamiltonien_rec(g,arc_courant->dest,c))
+        return 1;
+      chemin_arc_remove_last(c);
+    }
+  }
+  if(hamiltonien(g,*c)) {
+    return 1;
+  }
+  actuel->couleur = 0;
+  return 0;
 }
-
+int graphe_hamiltonien(pgraphe_t g) { // modifie couleur et tmp
+  if(g == NULL)
+    return 0;
+  init_couleur_sommet(g,0);
+  for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
+    chemin_t c; c.depart = g_courant;c.liste_arcs = NULL;
+    if(graphe_hamiltonien_rec(g,g_courant,&c))
+      return 1; // et c contient le chemin hamiltonien trouvé
+  }
+  return 0;
+}
 
 int longueur(pgraphe_t g, chemin_t c) {
   if(g == NULL)
@@ -594,7 +631,7 @@ int longueur(pgraphe_t g, chemin_t c) {
     return somme;
 }
 
-int distance(pgraphe_t g, int x, int y) { // attention : destructeur couleur
+int distance(pgraphe_t g, int x, int y) { // attention : modifie tmp
   if(g == NULL)
     return 0;
   pgraphe_t sommet_x = chercher_sommet(g,x);
@@ -607,26 +644,23 @@ int distance(pgraphe_t g, int x, int y) { // attention : destructeur couleur
 
 
 
-
-
-
-void distance_max_rec(pgraphe_t g,chemin_t c) {
-  if(g != NULL) {
+void distance_max_rec(pgraphe_t g, psommet_t actuel, chemin_t c) {  // attention : modifie tmp
+  if(actuel != NULL && g != NULL) {
     int dist;
-    for(parc_t arc_courant = g->liste_arcs; arc_courant != NULL; arc_courant = arc_courant->arc_suivant) {
-      dist = g->tmp + arc_courant->poids;
+    for(parc_t arc_courant = actuel->liste_arcs; arc_courant != NULL; arc_courant = arc_courant->arc_suivant) {
+      dist = actuel->tmp + arc_courant->poids;
       if(arc_courant->dest->tmp < dist) {
 				chemin_arc_push(&c,*arc_courant);
 				if(simple(g,c)) {
 					arc_courant->dest->tmp = dist;
-					distance_max_rec(arc_courant->dest,c);
+					distance_max_rec(g,arc_courant->dest,c);
 				}
 				chemin_arc_remove_last(&c);
       }
     }
   }
 }
-void distance_max(pgraphe_t g, int r) {
+void distance_max(pgraphe_t g, int r) { // attention : modifie tmp
   if(g == NULL)
     return;
   init_champ_tmp_sommet(g,0);
@@ -635,10 +669,10 @@ void distance_max(pgraphe_t g, int r) {
     return;
 	chemin_t c; c.depart = g;c .liste_arcs = NULL;
   g->tmp = 0;
-  distance_max_rec(g,c);
+  distance_max_rec(g,g,c);
 }
 
-int excentricite(pgraphe_t g, int n) {
+int excentricite(pgraphe_t g, int n) {  // attention : modifie tmp
 	if(g == NULL)
     return 0;
 	distance_max(g,n);
@@ -649,11 +683,11 @@ int excentricite(pgraphe_t g, int n) {
 	return max;
 }
 
-int diametre(pgraphe_t g) {
+int diametre(pgraphe_t g) {  // attention : modifie tmp
 	if(g == NULL)
     return 0;
 	int max = 0,tmp;
-	for(pgraphe_t g_courant = g ; g_courant->sommet_suivant != NULL ; g_courant = g_courant->sommet_suivant) {
+	for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
 		tmp = excentricite(g,g->label);
 		if(tmp > max)
 			max = tmp;
