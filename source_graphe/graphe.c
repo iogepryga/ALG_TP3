@@ -194,7 +194,7 @@ void afficher_graphe_largeur (pgraphe_t g, int r) { // attention modifie tmp
   enfiler(file, sommet);
   while (!file_vide(file)) {
     sommet = (psommet_t) defiler(file);
-    printf("%d ", sommet->label);
+    printf("%d (%d)", sommet->label, sommet->couleur);
     sommet->tmp = 1;
     
     parc_t arc = sommet->liste_arcs;

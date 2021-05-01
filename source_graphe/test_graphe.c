@@ -36,4 +36,86 @@ int main (int argc, char **argv)
   printf ("nombre chromatique graphe = %d\n", nc) ;
 
   ecrire_graphe_colorie (g) ;
+
+
+  printf("=========================\n      afficher_graphe_largeur\n");
+  for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
+    printf("<-----------------------> (label:%d) \n",g_courant->label);
+    afficher_graphe_largeur(g,g_courant->label);
+    printf("\n");
+  }
+
+  printf("=========================\n      afficher_graphe_profondeur\n");
+  for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
+    printf("<-----------------------> (label:%d) \n",g_courant->label);
+    afficher_graphe_profondeur(g,g_courant->label);
+    printf("\n");
+  }
+
+  printf("=========================\n      algo_dijkstra\n");
+  for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
+    printf("<-----------------------> (label:%d) \n",g_courant->label);
+    algo_dijkstra(g,g_courant->label);
+    afficher_graphe_largeur(g,g_courant->label);
+    printf("\n");
+  }
+
+  printf("=========================\n      degre_sortant_sommet\n");
+  for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
+    printf("<----------------------->\n");
+    printf("degre_sortant_sommet(g,g_courant) : %d",degre_sortant_sommet(g,g_courant));
+    printf("\n");
+  }
+
+  printf("=========================\n      degre_entrant_sommet\n");
+  for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
+    printf("<----------------------->\n");
+    printf("degre_entrant_sommet(g,g_courant) : %d",degre_entrant_sommet(g,g_courant));
+    printf("\n");
+  }
+
+  printf("=========================\n      degre_entrant_sommet(g) = %d\n", degre_maximal_graphe(g));
+
+  printf("=========================\n      degre_minimal_graphe(g) = %d\n", degre_minimal_graphe(g));
+
+  printf("=========================\n      independant(g) : %d\n", independant(g));
+
+  printf("=========================\n      complet(g) : %d\n", complet(g));
+
+  printf("=========================\n      regulier(g) : %d\n", regulier(g));
+
+  // elementaire
+
+  // eulerien
+
+  // hamiltonien
+
+  printf("=========================\n      graphe_eulerien(g) : %d\n", graphe_eulerien(g));
+
+  printf("=========================\n      graphe_hamiltonien(g) : %d\n", graphe_hamiltonien(g));
+
+
+  printf("=========================\n      excentricite\n");
+  for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
+    printf("<----------------------->\n");
+    printf("excentricite(g,g_courant->label) (label:%d) = %d",g_courant->label,excentricite(g,g_courant->label));
+    printf("\n");
+  }
+
+  printf("=========================\n      diametre(g) : %d\n", diametre(g));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
