@@ -13,6 +13,7 @@
 #include "fap.h"
 #include "file.h"
 
+#define degre_sommet(g,gc) (degre_entrant_sommet(g,gc)+degre_sortant_sommet(g,gc))
 
 psommet_t chercher_sommet (pgraphe_t g, int label) {
   psommet_t s ;
@@ -79,6 +80,15 @@ int nombre_arcs (pgraphe_t g) {
   return nb_arcs ;
 }
 
+int nombre_arc (psommet_t g) {
+  if(g == NULL)
+    return 0;
+  int nb_arcs = 0 ;
+  for(parc_t l = g->liste_arcs ; l != NULL; l = l->arc_suivant)
+      nb_arcs = nb_arcs + 1 ;
+  return nb_arcs ;
+}
+
 void init_couleur_sommet (pgraphe_t g, int x) {
   psommet_t p = g ;
 
@@ -91,13 +101,8 @@ void init_couleur_sommet (pgraphe_t g, int x) {
 }
 
 void init_champ_tmp_sommet (pgraphe_t g, int x) {
-  psommet_t p = g ;
-
-  while (p != NULL) {
-    p->tmp = x ; // couleur indefinie
-    p = p->sommet_suivant ; // passer au sommet suivant dans le graphe
-  }
-
+  for(; g != NULL ; g = g->sommet_suivant)
+    g->tmp = x;
   return ;
 }
 
@@ -232,6 +237,8 @@ void afficher_graphe_profondeur (pgraphe_t g, int r) {
   afficher_graphe_profondeur_rec(g);
 }
 
+//Fonctions pour algo de dijkstra
+
 int plus_petite_distance (int* Tab, int len, psommet_t* File){
   int indice = 0;
   while (File[indice] == NULL && indice < len)
@@ -247,6 +254,8 @@ int plus_petite_distance (int* Tab, int len, psommet_t* File){
   }
   return res;
 }
+
+
 
 int indiceOff (psommet_t* Tab,int len, int elem){
   for (int i = 0; i < len; i++){
@@ -287,9 +296,10 @@ void algo_dijkstra (pgraphe_t g, int r) {
  //init arbre
   init_couleur_sommet (g, INT_MAX);
 
-  /*
+  
  //init tableau parent
   int nb_sommets = nombre_sommets (g);
+  /*
   int Parent[nb_sommets];
   for (int i = 0; i < nb_sommets; i ++){
     Parent[i] = NULL;
@@ -351,49 +361,6 @@ void algo_dijkstra (pgraphe_t g, int r) {
   }
     free(Tableau_sommets);
 }
-//Fonctions pour algo de dijkstra
-int plus_petite_distance (int* Tab, int len, psommet_t* File){
-  int indice = 0;
-  while (File[indice] == NULL && indice < len)
-    indice++;
-  
-  if (indice == len)
-    return -1;
-
-  int res = Tab[indice];
-  for (int i = indice + 1; i < len; i++){
-    if (Tab[i] < Tab[res] && File[i] != NULL)
-      res = i;
-  }
-  return res;
-}
-
-int indiceOff (psommet_t* Tab,int len, int elem){
-  for (int i = 0; i < len; i++){
-    if (Tab[i] -> label == elem)
-      return i;
-  }
-  return -1;
-}
-
-psommet_t* tableau_liste_sommets (pgraphe_t g){
-  psommet_t* Tab = malloc(sizeof(psommet_t) * nombre_sommets (g));
-  int i = 0;
-  while (g != NULL){
-    Tab[i] = g;
-    g = g -> sommet_suivant;
-    i++;
-  }
-  return Tab;
-}
-
-int tableeau_est_vide (psommet_t* Tab, int len){
-  for (int i = 0; i < len; i++){
-    if (Tab[i] != NULL)
-      return 0;
-  }
-  return 1;
-}
 
 void Print_Dijkstra (pgraphe_t g, int r){
   if (g == NULL)
@@ -422,6 +389,15 @@ void Print_Dijkstra (pgraphe_t g, int r){
         enfiler(file, arc->dest);
       arc = arc->arc_suivant;
     }
+  }
+}
+
+void afficher_graphe_sommet(pgraphe_t g) {
+  if (g== NULL)
+   return;
+  for( pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant)
+    printf("%d(c=%d,d=%d)  ",g_courant->label,g_courant->couleur,g_courant->tmp);
+  printf("\n");
 }
 
 // ======================================================================
@@ -471,11 +447,13 @@ int degre_maximal_graphe (pgraphe_t g) // sortant ou entrant ?!
  	if(g == NULL)
     return 0;
 	int max = 0,tmp;
+
 	for (pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
-		tmp = degre_entrant_sommet(g,g_courant) + degre_sortant_sommet(g,g_courant);
+		tmp = degre_sommet(g,g_courant);
 		if(tmp > max)
 			max = tmp;
 	}
+
   return max;
 }
 
@@ -487,11 +465,13 @@ int degre_minimal_graphe (pgraphe_t g) // sortant ou entrant ?!
 	if(g == NULL)
 		return 0;
 	int min = INT_MAX,tmp;
+
 	for (pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
-		tmp = degre_entrant_sommet(g,g_courant) + degre_sortant_sommet(g,g_courant);
+		tmp = degre_sommet(g,g_courant);
 		if(tmp < min)
 			min = tmp;
 	}
+
   return min;
 }
 
@@ -504,18 +484,20 @@ int independant (pgraphe_t g)
   return d == 0 || d == 1 ;
 }
 
-#define Onveutquoi 1 // 1 ou 2 ?
-
 int complet (pgraphe_t g) // algo bourrin dégeulasse
 {
   /* Toutes les paires de sommet du graphe sont jointes par un arc */
 	if(g == NULL)
 		return 0;
 	int nb_sommets = nombre_sommets(g);
-	for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant)
-		if((degre_entrant_sommet(g,g_courant) + degre_sortant_sommet(g,g_courant)) != Onveutquoi*(nb_sommets-1))
-			return 0;
-  return 1;
+  // Tentative 1 :
+	// for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant)
+	// 	if((degre_entrant_sommet(g,g_courant) + degre_sortant_sommet(g,g_courant)) != (nb_sommets-1)*2)
+	// 		return 0;
+  // return 1;
+  // Tentative 2 :
+  return (degre_minimal_graphe(g) >= ((nb_sommets-1)*2));
+  
 }
 
 int regulier (pgraphe_t g)
@@ -525,9 +507,9 @@ int regulier (pgraphe_t g)
      g est le ponteur vers le premier sommet du graphe
      renvoie 1 si le graphe est régulier, 0 sinon
   */
-	if(g == NULL)
-		return 0;
-  return (degre_minimal_graphe(g) == degre_maximal_graphe(g));
+	// if(g == NULL)
+	// 	return 0;
+  return (g != NULL && degre_minimal_graphe(g) == degre_maximal_graphe(g));
 }
 
 
@@ -552,7 +534,7 @@ void chemin_arc_push(pchemin_t c, arc_t arc) { // (=append)
 	}
 }
 
-void chemin_arc_remove_last(pchemin_t c) {
+void chemin_arc_pop(pchemin_t c) {
 	if(c == NULL || c->liste_arcs == NULL )
 		return;
 	if(c->liste_arcs->arc_suivant == NULL) {
@@ -568,7 +550,22 @@ void chemin_arc_remove_last(pchemin_t c) {
 	}
 }
 
-int elementaire (pgraphe_t g, chemin_t c) {
+void print_chemin(chemin_t c) {
+  if(c.depart != NULL) {
+    printf("%d(c=%d,d=%d)", c.depart->label,c.depart->couleur,c.depart->tmp);
+    for(parc_t arc_courant = c.liste_arcs ; arc_courant != NULL ; arc_courant = arc_courant->arc_suivant)
+      printf("  --%d->  %d(c=%d,d=%d)",arc_courant->poids,arc_courant->dest->label,arc_courant->dest->couleur,arc_courant->dest->tmp);
+  }
+  printf("\n");
+}
+
+void free_chemin(chemin_t c){
+  while (c.liste_arcs != NULL){
+    chemin_arc_pop(&c);
+  }
+}
+
+int elementaire (pgraphe_t g, chemin_t c) {  // passif // debuggé
   if(g == NULL)
     return 0;
   pgraphe_t g_courant = c.depart;
@@ -586,12 +583,14 @@ int elementaire (pgraphe_t g, chemin_t c) {
 //   return nb_arcs ;
 // }
 
-int simple(pgraphe_t g, chemin_t c) {
+int simple(pgraphe_t g, chemin_t c) {  // passif // debuggé
   if(g == NULL)
     return 0;
-  for(parc_t arc_courant = c.liste_arcs; arc_courant != NULL ; arc_courant = arc_courant->arc_suivant){
-    for(parc_t sub_arc_courant = arc_courant->arc_suivant ; sub_arc_courant != NULL ; sub_arc_courant = sub_arc_courant->arc_suivant)
-      if(sub_arc_courant == arc_courant)
+  psommet_t g_depart = c.depart;
+  for(parc_t arc_courant = c.liste_arcs; arc_courant != NULL ; g_depart = arc_courant->dest , arc_courant = arc_courant->arc_suivant){
+    psommet_t g_depart_sub = arc_courant->dest;
+    for(parc_t sub_arc_courant = arc_courant->arc_suivant ; sub_arc_courant != NULL ; g_depart_sub = sub_arc_courant->dest, sub_arc_courant = sub_arc_courant->arc_suivant)
+      if(g_depart == g_depart_sub && arc_courant->dest == sub_arc_courant->dest && arc_courant->poids == sub_arc_courant->poids)
         return 0;
 	}
   return 1;
@@ -617,15 +616,15 @@ int eulerien(pgraphe_t g, chemin_t c) {
   return 1;
 }
 
-int hamiltonien(pgraphe_t g, chemin_t c) {  // attention : modifie tmp
+int hamiltonien(pgraphe_t g, chemin_t c) {  // attention : modifie tmp // à l'air de marché (=debuggé)
   if(g == NULL)
     return 0;
   // version destructrice de tmp :
   init_champ_tmp_sommet(g,0);
   if(c.depart != NULL)
-    c.depart++;
+    (c.depart->tmp)++;
   for(parc_t arc_chemin_courant = c.liste_arcs; arc_chemin_courant != NULL ; arc_chemin_courant = arc_chemin_courant->arc_suivant)
-    arc_chemin_courant->dest->tmp++;
+    (arc_chemin_courant->dest->tmp)++;
   for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant)
     if(g_courant->tmp != 1)
       return 0;
@@ -641,7 +640,7 @@ int graphe_eulerien_rec(pgraphe_t g,psommet_t actuel,pchemin_t c) {  // A verif
       if(graphe_eulerien_rec(g,arc_courant->dest,c))
         return 1;
     }
-    chemin_arc_remove_last(c);
+    chemin_arc_pop(c);
   }
   if(eulerien(g,*c)) {
     return 1;
@@ -670,7 +669,7 @@ int graphe_hamiltonien_rec(pgraphe_t g, psommet_t actuel, pchemin_t c) {  // mod
       chemin_arc_push(c,*arc_courant);
       if(graphe_hamiltonien_rec(g,arc_courant->dest,c))
         return 1;
-      chemin_arc_remove_last(c);
+      chemin_arc_pop(c);
     }
   }
   if(hamiltonien(g,*c)) {
@@ -724,7 +723,7 @@ void distance_max_rec(pgraphe_t g, psommet_t actuel, chemin_t c) {  // attention
 					arc_courant->dest->tmp = dist;
 					distance_max_rec(g,arc_courant->dest,c);
 				}
-				chemin_arc_remove_last(&c);
+				chemin_arc_pop(&c);
       }
     }
   }

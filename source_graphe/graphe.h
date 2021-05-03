@@ -42,7 +42,12 @@ psommet_t chercher_sommet (pgraphe_t g, int label) ;
 
 void ajouter_arc (psommet_t o, psommet_t d, int distance) ;
 
+void init_couleur_sommet (pgraphe_t g, int x);
+void init_champ_tmp_sommet (pgraphe_t g, int x);
+
 int nombre_arcs (pgraphe_t g) ;
+
+int nombre_arc (psommet_t g);
 
 int nombre_sommets (pgraphe_t g) ;
 
@@ -60,6 +65,8 @@ int colorier_graphe (pgraphe_t g) ;
 void afficher_graphe_profondeur (pgraphe_t g, int r) ;
 
 void afficher_graphe_largeur (pgraphe_t g, int r) ;
+
+void afficher_graphe_sommet(pgraphe_t g);
 
 void algo_dijkstra (pgraphe_t g, int r) ;
 
@@ -79,15 +86,22 @@ int complet (pgraphe_t g);
 int regulier (pgraphe_t g);
 
 
+
+void chemin_arc_push(pchemin_t c, arc_t arc);
+void chemin_arc_pop(pchemin_t c);
+void print_chemin(chemin_t c);
+void free_chemin(chemin_t c);
+
 int elementaire (pgraphe_t g, chemin_t c);
-
 // int nb_arcs(chemin_t c);
-
 int simple(pgraphe_t g, chemin_t c);
 
 int eulerien(pgraphe_t g, chemin_t c);
 
 int hamiltonien(pgraphe_t g, chemin_t c);
+
+
+
 
 int graphe_eulerien(pgraphe_t g);
 
@@ -98,8 +112,6 @@ int distance(pgraphe_t g, int x, int y);
 int excentricite(pgraphe_t g, int n);
 
 int diametre(pgraphe_t g);
-
-void afficher_graphe_sommet(pgraphe_t g);
 
 
 

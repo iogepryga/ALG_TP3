@@ -38,6 +38,28 @@ int main (int argc, char **argv)
   ecrire_graphe_colorie (g) ;
 
 
+  printf("=========================\n      nombre_sommets(g) = %d\n", nombre_sommets(g));
+
+  printf("=========================\n      nombre_sommets(g) = %d\n", nombre_arcs(g));
+
+  printf("=========================\n      nombre_arc\n");
+  for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
+    printf("<----------------------->\n");
+    printf("nombre_arc(g_courant) (label:%d) = %d\n",g_courant->label,nombre_arc(g_courant));
+  }
+
+  printf("=========================\n      init_couleur_sommet(g,9)\nAvant :\n");
+  afficher_graphe_sommet(g);
+  printf("Apres :\n");
+  init_couleur_sommet(g,9);
+  afficher_graphe_sommet(g);
+
+  printf("=========================\n      init_champ_tmp_sommet(g,9)\nAvant :\n");
+  afficher_graphe_sommet(g);
+  printf("Apres :\n");
+  init_champ_tmp_sommet(g,9);
+  afficher_graphe_sommet(g);
+
   printf("=========================\n      afficher_graphe_largeur\n");
   for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
     printf("<-----------------------> (label:%d) \n",g_courant->label);
@@ -64,15 +86,13 @@ int main (int argc, char **argv)
   printf("=========================\n      degre_sortant_sommet\n");
   for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
     printf("<----------------------->\n");
-    printf("degre_sortant_sommet(g,g_courant) (label:%d) : %d",g_courant->label,degre_sortant_sommet(g,g_courant));
-    printf("\n");
+    printf("degre_sortant_sommet(g,g_courant) (label:%d) = %d\n",g_courant->label,degre_sortant_sommet(g,g_courant));
   }
 
   printf("=========================\n      degre_entrant_sommet\n");
   for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
     printf("<----------------------->\n");
-    printf("degre_entrant_sommet(g,g_courant) (label:%d) : %d",g_courant->label,degre_entrant_sommet(g,g_courant));
-    printf("\n");
+    printf("degre_entrant_sommet(g,g_courant) (label:%d) = %d\n",g_courant->label,degre_entrant_sommet(g,g_courant));
   }
 
   printf("=========================\n      degre_maximal_graphe(g) = %d\n", degre_maximal_graphe(g));
@@ -85,16 +105,14 @@ int main (int argc, char **argv)
 
   printf("=========================\n      regulier(g) : %d\n", regulier(g));
 
-  // elementaire
-
-  // eulerien
-
-  // hamiltonien
-
   // printf("=========================\n      graphe_eulerien(g) : %d\n", graphe_eulerien(g));
 
   // printf("=========================\n      graphe_hamiltonien(g) : %d\n", graphe_hamiltonien(g));
 
+  // printf("=========================\n      distance\n<----------------------->\n");
+  // for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant)
+  //   for(pgraphe_t sub_g_courant = g ; sub_g_courant != NULL ; sub_g_courant = sub_g_courant->sommet_suivant) 
+  //     printf("distance(g,%d,%d) = %d\n",g_courant->label,sub_g_courant->label,distance(g,g_courant->label,sub_g_courant->label));
 
   printf("=========================\n      excentricite\n");
   for(pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant) {
