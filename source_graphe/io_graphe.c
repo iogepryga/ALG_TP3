@@ -15,7 +15,7 @@ void lire_graphe (char * file_name, pgraphe_t *g)
   psommet_t c ;
   int origine, destination, distance ;
     
-  printf ("fichier %s\n", file_name) ; 
+  // printf ("fichier %s\n", file_name) ; 
   f = fopen (file_name, "r") ;
   if (f == NULL)
     {

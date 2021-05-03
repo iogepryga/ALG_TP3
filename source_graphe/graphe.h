@@ -1,3 +1,5 @@
+typedef struct a *parc_t;
+
 /*
   definition des types sommet et pointeur de sommet
   un graphe est constitué d'une liste de sommets
@@ -54,11 +56,28 @@ void ecrire_graphe_colorie (psommet_t p) ;
 
 int colorier_graphe (pgraphe_t g) ;
 
+
 void afficher_graphe_profondeur (pgraphe_t g, int r) ;
 
 void afficher_graphe_largeur (pgraphe_t g, int r) ;
 
 void algo_dijkstra (pgraphe_t g, int r) ;
+
+
+int degre_sortant_sommet (pgraphe_t g, psommet_t s);
+
+int degre_entrant_sommet (pgraphe_t g, psommet_t s);
+
+int degre_maximal_graphe (pgraphe_t g);
+
+int degre_minimal_graphe (pgraphe_t g);
+
+int independant (pgraphe_t g);
+
+int complet (pgraphe_t g);
+
+int regulier (pgraphe_t g);
+
 
 int elementaire (pgraphe_t g, chemin_t c);
 
@@ -79,3 +98,8 @@ int distance(pgraphe_t g, int x, int y);
 int excentricite(pgraphe_t g, int n);
 
 int diametre(pgraphe_t g);
+
+void afficher_graphe_sommet(pgraphe_t g);
+
+
+
