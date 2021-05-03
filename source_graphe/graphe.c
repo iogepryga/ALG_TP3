@@ -285,14 +285,16 @@ void algo_dijkstra (pgraphe_t g, int r) {
       return;
       
  //init arbre
-  init_champ_tmp_sommet (g, INT_MAX);
+  init_couleur_sommet (g, INT_MAX);
 
+  /*
  //init tableau parent
   int nb_sommets = nombre_sommets (g);
   int Parent[nb_sommets];
   for (int i = 0; i < nb_sommets; i ++){
     Parent[i] = NULL;
   }
+  */
 
  //init tableau sommets / file
   psommet_t* Tableau_sommets = tableau_liste_sommets(g);
@@ -305,7 +307,7 @@ void algo_dijkstra (pgraphe_t g, int r) {
   
  //init sommet r
   psommet_t sommet = chercher_sommet (g, r);
-  sommet -> tmp = 0;
+  sommet -> couleur = 0;
   int indice = indiceOff(Tableau_sommets, nb_sommets, r);
   if ( indice != -1 )
     Tableau_dist_sommets[indice] = 0;
@@ -337,8 +339,8 @@ void algo_dijkstra (pgraphe_t g, int r) {
       if ( Tableau_dist_sommets[indice_dest] > ( Tableau_dist_sommets[indice_sommet] + arc -> poids)){
         //alors on actualise la nouvelle distance optimale du sommet destination
         Tableau_dist_sommets[indice_dest] = (Tableau_dist_sommets[indice_sommet] + arc -> poids);
-        g -> tmp = Tableau_dist_sommets[indice_sommet] + arc -> poids;
-        Parent[indice_dest] = g -> label;
+        g -> couleur = Tableau_dist_sommets[indice_sommet] + arc -> poids;
+        // pour tableau parent : Parent[indice_dest] = g -> label;
       }
       //On passe à l'arc suivant
       arc = arc -> arc_suivant;
@@ -350,18 +352,76 @@ void algo_dijkstra (pgraphe_t g, int r) {
     free(Tableau_sommets);
 }
 //Fonctions pour algo de dijkstra
+int plus_petite_distance (int* Tab, int len, psommet_t* File){
+  int indice = 0;
+  while (File[indice] == NULL && indice < len)
+    indice++;
+  
+  if (indice == len)
+    return -1;
 
-
-void Print_Dijkstra (pgraphe_t g){
-  return; // A FAIRE
+  int res = Tab[indice];
+  for (int i = indice + 1; i < len; i++){
+    if (Tab[i] < Tab[res] && File[i] != NULL)
+      res = i;
+  }
+  return res;
 }
 
-void afficher_graphe_sommet(pgraphe_t g) {
-  if (g== NULL)
-   return;
-  for( pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant)
-    printf("%d(d=%d)  ",g_courant->label,g_courant->tmp);
-  printf("\n");
+int indiceOff (psommet_t* Tab,int len, int elem){
+  for (int i = 0; i < len; i++){
+    if (Tab[i] -> label == elem)
+      return i;
+  }
+  return -1;
+}
+
+psommet_t* tableau_liste_sommets (pgraphe_t g){
+  psommet_t* Tab = malloc(sizeof(psommet_t) * nombre_sommets (g));
+  int i = 0;
+  while (g != NULL){
+    Tab[i] = g;
+    g = g -> sommet_suivant;
+    i++;
+  }
+  return Tab;
+}
+
+int tableeau_est_vide (psommet_t* Tab, int len){
+  for (int i = 0; i < len; i++){
+    if (Tab[i] != NULL)
+      return 0;
+  }
+  return 1;
+}
+
+void Print_Dijkstra (pgraphe_t g, int r){
+  if (g == NULL)
+		return;
+
+  algo_dijkstra(g, r);
+
+  // On initialise tous les champs tmp à 0 (parcours vierge)
+  init_champ_tmp_sommet(g, 0);
+  // On crée une file vide
+  pfile_t file = creer_file();
+
+  psommet_t sommet = chercher_sommet(g, r);
+  if (sommet == NULL)
+    return;
+
+  enfiler(file, sommet);
+  while (!file_vide(file)) {
+    sommet = (psommet_t) defiler(file);
+    printf("%d (distance : %d)", sommet->label, sommet->couleur);
+    sommet->tmp = 1;
+    
+    parc_t arc = sommet->liste_arcs;
+    while (arc != NULL) {
+      if (arc->dest->tmp == 0)
+        enfiler(file, arc->dest);
+      arc = arc->arc_suivant;
+    }
 }
 
 // ======================================================================
