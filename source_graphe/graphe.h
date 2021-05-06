@@ -92,6 +92,8 @@ void chemin_arc_pop(pchemin_t c);
 void print_chemin(chemin_t c);
 void free_chemin(chemin_t c);
 
+int longueur(pgraphe_t g, chemin_t c);
+
 int elementaire (pgraphe_t g, chemin_t c);
 // int nb_arcs(chemin_t c);
 int simple(pgraphe_t g, chemin_t c);
@@ -106,6 +108,10 @@ int hamiltonien(pgraphe_t g, chemin_t c);
 int graphe_eulerien(pgraphe_t g);
 
 int graphe_hamiltonien(pgraphe_t g);
+
+void distance_min(pgraphe_t g, int r);
+
+void distance_max(pgraphe_t g, int r);
 
 int distance(pgraphe_t g, int x, int y);
 
