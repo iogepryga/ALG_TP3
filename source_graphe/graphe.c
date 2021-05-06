@@ -358,7 +358,7 @@ void algo_dijkstra (pgraphe_t g, int r) {
   psommet_t* Tableau_sommets = tableau_liste_sommets(g);
 
  //init tableau distance sommet
-  int* Tableau_dist_sommets[nb_sommets];
+  int* Tableau_dist_sommets = malloc(sizeof(int) * nb_sommets);
   for (int i = 0; i < nb_sommets; i++){
     Tableau_dist_sommets[i] = INT_MAX;
   }
@@ -411,33 +411,18 @@ void algo_dijkstra (pgraphe_t g, int r) {
 }
 
 void Print_Dijkstra (pgraphe_t g, int r){
-  if (g == NULL)
-		return;
+  /*
+    debuggé avec : considéré juste et sans bug
+  */
+  if (g== NULL)
+   return;
 
-  algo_dijkstra(g, r);
+  algo_dijkstra (g,r);
+  
+  for( pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant)
+    printf("%d(distance au point de départ = %d)  ",g_courant->label,g_courant->couleur);
+  printf("\n");
 
-  // On initialise tous les champs tmp à 0 (parcours vierge)
-  init_champ_tmp_sommet(g, 0);
-  // On crée une file vide
-  pfile_t file = creer_file();
-
-  psommet_t sommet = chercher_sommet(g, r);
-  if (sommet == NULL)
-    return;
-
-  enfiler(file, sommet);
-  while (!file_vide(file)) {
-    sommet = (psommet_t) defiler(file);
-    printf("%d (distance : %d)", sommet->label, sommet->couleur);
-    sommet->tmp = 1;
-    
-    parc_t arc = sommet->liste_arcs;
-    while (arc != NULL) {
-      if (arc->dest->tmp == 0)
-        enfiler(file, arc->dest);
-      arc = arc->arc_suivant;
-    }
-  }
 }
 
 
