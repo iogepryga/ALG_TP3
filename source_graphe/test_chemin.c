@@ -58,33 +58,39 @@ int main (int argc, char **argv)
       fprintf (stderr, "erreur parametre \n") ;
       exit (-1) ;
     }
-
-  /*
-    la fonction lire_graphe alloue le graphe (matrice,...) 
-    et lit les donnees du fichier passe en parametre
-  */
   
   
   lire_graphe (argv [1], &g) ;
 
-  #define NB_EXPE 20
+  #define NB_EXPE 100
+
+
   #define NB_SAUT_MAX 6
+  // int NB_SAUT_MAX = nombre_arcs(g); // eulerien
+  // int NB_SAUT_MAX = nombre_sommets(g) - 1; // hamiltonien
+
 
   init_couleur_sommet(g,0);
   init_champ_tmp_sommet(g,0);
   srand(time(NULL));
 
+  printf("=========================\n      propriété graphe :\n");
+  printf("graphe_eulerien(g) : %d\n", graphe_eulerien(g));
+  printf("graphe_hamiltonien(g) : %d\n", graphe_hamiltonien(g));
+
   printf("=========================\n      %d chemin(s) testé(s) :\n",NB_EXPE);
   for(int i = 0 ; i < NB_EXPE ; i++){
     printf("<--------------->\n");
-    chemin_t ctmp = gen_chemin_rand_fixedsaut(g,rand()%NB_SAUT_MAX);
+
+    chemin_t ctmp = gen_chemin_rand_fixedsaut(g,NB_SAUT_MAX);
+    // chemin_t ctmp = gen_chemin_rand_fixedsaut(g,rand()%(NB_SAUT_MAX+1));
+
     print_chemin(ctmp);
-    printf("longueur ? = %d\n",longueur(g,ctmp));
-    printf("elementaire ? : %d\n",elementaire(g,ctmp));
-    printf("simple ? : %d\n",simple(g,ctmp));
-    printf("eulerien ? : %d\n",eulerien(g,ctmp));
-    printf("hamiltonien ? : %d\n",hamiltonien(g,ctmp));
-    // print_chemin(ctmp);
+    printf("longueur ?                                   = %d\n",longueur(g,ctmp));
+    printf("elementaire            (sommets distincts) ? : %d\n",elementaire(g,ctmp));
+    printf("simple                      (arc distinct) ? : %d\n",simple(g,ctmp));
+    printf("eulerien       (tout les arcs et distinct) ? : %d\n",eulerien(g,ctmp)); //if(eulerien(g,ctmp))printf("LAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
+    printf("hamiltonien (tout les sommets et distinct) ? : %d\n",hamiltonien(g,ctmp));// if(hamiltonien(g,ctmp))printf("LEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE\n");
     free_chemin(ctmp);
   }
 }

@@ -22,8 +22,10 @@ int main (int argc, char **argv)
   lire_graphe (argv [1], &g) ;
 
   printf("digraph aef{\n\t/* HORIZONTAL */ rankdir=LR;\n\tnode [peripheries=1];\n");
-  for(pgraphe_t gc = g ; gc != NULL ; gc= gc->sommet_suivant)
+  for(pgraphe_t gc = g ; gc != NULL ; gc= gc->sommet_suivant) {
+    printf("\t%d;\n",gc->label);
     for(parc_t ac = gc->liste_arcs ; ac != NULL ; ac = ac->arc_suivant)
       printf("\t%d -> %d [label=%d];\n",gc->label,ac->dest->label,ac->poids);
+  }
   printf("}\n");
 }

@@ -56,7 +56,7 @@ void ajouter_arc (psommet_t o, psommet_t d, int distance) {
 
 int nombre_sommets (pgraphe_t g) {
   /*
-    debuggé avec : gr0, gr1, gr2, gr3, gr4
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
   psommet_t p = g ;
   int nb = 0 ;
@@ -70,7 +70,7 @@ int nombre_sommets (pgraphe_t g) {
 
 int nombre_arcs (pgraphe_t g) {
   /*
-    debuggé avec : gr0, gr1, gr2, gr3, gr4
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
   psommet_t p = g ;
   int nb_arcs = 0 ;
@@ -88,7 +88,7 @@ int nombre_arcs (pgraphe_t g) {
 
 int nombre_arc (psommet_t g) {
   /*
-    debuggé avec : gr0, gr1, gr2, gr3, gr4
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
   if(g == NULL)
     return 0;
@@ -101,7 +101,7 @@ int nombre_arc (psommet_t g) {
 void init_couleur_sommet (pgraphe_t g, int x) {
   /*
     /!\ modifie couleur /!\
-    debuggé avec : gr0, gr1, gr2, gr3, gr4
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
   psommet_t p = g ;
 
@@ -116,7 +116,7 @@ void init_couleur_sommet (pgraphe_t g, int x) {
 void init_champ_tmp_sommet (pgraphe_t g, int x) {
   /*
     /!\ modifie tmp /!\
-    debuggé avec : gr0, gr1, gr2, gr3, gr4
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
   for(; g != NULL ; g = g->sommet_suivant)
     g->tmp = x;
@@ -133,8 +133,6 @@ int colorier_graphe (pgraphe_t g) {
     graphe data/gr_sched2
 
     /!\ modifie couleur /!\
-    debuggé avec : marche pas avec gr0, gr3
-    marche avec gr2, 
   */
 
   psommet_t p = g ;
@@ -175,7 +173,7 @@ int colorier_graphe (pgraphe_t g) {
 void afficher_graphe_largeur (pgraphe_t g, int r) {
   /*
     /!\ modifie tmp /!\
-    debuggé avec : gr0, gr1, gr2, gr3, gr4
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
   /*
     afficher les sommets du graphe avec un parcours en largeur
@@ -243,7 +241,7 @@ void afficher_graphe_largeur (pgraphe_t g, int r) {
 void afficher_graphe_profondeur_rec (pgraphe_t g) {
   /*
     /!\ modifie tmp /!\
-    debuggé avec : gr0, gr1, gr2, gr4
+    debuggé avec : gr0, gr1, gr2, gr4, gr5, gr6
   */
   if(g != NULL) {
     g->tmp = 1;
@@ -257,7 +255,7 @@ void afficher_graphe_profondeur (pgraphe_t g, int r) {
   /*
     afficher les sommets du graphe avec un parcours en profondeur
     /!\ modifie tmp /!\
-    debuggé avec : gr0, gr1, gr2, gr3, gr4
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
   if(g == NULL)
     return;
@@ -452,8 +450,8 @@ void afficher_graphe_sommet(pgraphe_t g) {
   if (g== NULL)
    return;
   for( pgraphe_t g_courant = g ; g_courant != NULL ; g_courant = g_courant->sommet_suivant)
-    printf("%d(c=%d,d=%d)  ",g_courant->label,g_courant->couleur,g_courant->tmp);
-  printf("\n");
+    printf("%d(c=%d,d=%d)\n",g_courant->label,g_courant->couleur,g_courant->tmp);
+  // printf("\n");
 }
 
 // ======================================================================
@@ -465,7 +463,7 @@ int degre_sortant_sommet (pgraphe_t g, psommet_t s) {
   /*
     Cette fonction retourne le nombre d'arcs sortants 
     du sommet n dans le graphe g
-    debuggé avec : gr0, gr1, gr2, gr3, gr4
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
   if(g == NULL || s == NULL)
     return 0;
@@ -481,7 +479,7 @@ int degre_entrant_sommet (pgraphe_t g, psommet_t s) {
   /*
     Cette fonction retourne le nombre d'arcs entrants 
     dans le noeud n dans le graphe g
-    debuggé avec : gr0, gr1, gr2, gr3, gr4
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
   if(g == NULL || s == NULL)
     return 0;
@@ -498,7 +496,7 @@ int degre_entrant_sommet (pgraphe_t g, psommet_t s) {
 int degre_maximal_graphe (pgraphe_t g) {
   /*
     Max des degres des sommets du graphe g
-    debuggé avec : gr0, gr1, gr2, gr3, gr4
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
  	if(g == NULL)
     return 0;
@@ -516,7 +514,7 @@ int degre_maximal_graphe (pgraphe_t g) {
 int degre_minimal_graphe (pgraphe_t g) {
   /*
     Min des degres des sommets du graphe g
-    debuggé avec : gr0, gr1, gr2, gr3, gr4
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
 	if(g == NULL)
 		return 0;
@@ -534,7 +532,8 @@ int degre_minimal_graphe (pgraphe_t g) {
 int independant (pgraphe_t g) {
   /* 
     Les aretes du graphe n'ont pas de sommet en commun
-    debuggé avec : 
+    debuggé avec :
+    erreur : gr_custom3 
   */
 	if(g == NULL)
 		return 0;
@@ -546,7 +545,7 @@ int complet (pgraphe_t g) {
   /*
     Toutes les paires de sommet du graphe sont jointes par un arc 
     algo bourrin dégeulasse
-    debuggé avec : gr0, gr1, gr2, gr3, gr4
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6, gr_custom1
   */
   
 	if(g == NULL)
@@ -564,7 +563,7 @@ int complet (pgraphe_t g) {
 
 int regulier (pgraphe_t g) {
   /*
-    debuggé avec : gr0, gr1, gr2, gr3, gr4
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6, gr_custom1
   */
   /* 
      graphe regulier: tous les sommets ont le meme degre
@@ -643,7 +642,7 @@ void free_chemin(chemin_t c){
 
 int elementaire (pgraphe_t g, chemin_t c) {
   /*
-    debuggé avec : 
+    debuggé avec : + de 30 chemins
   */
   if(g == NULL)
     return 0;
@@ -664,7 +663,7 @@ int elementaire (pgraphe_t g, chemin_t c) {
 
 int simple(pgraphe_t g, chemin_t c) { 
   /*
-    debuggé avec : 
+    debuggé avec : + de 30 chemins
   */
   if(g == NULL)
     return 0;
@@ -680,7 +679,7 @@ int simple(pgraphe_t g, chemin_t c) {
 
 int longueur(pgraphe_t g, chemin_t c) {
   /*
-    debuggé avec : 
+    debuggé avec : gr4(20 chemins),
   */
   if(g == NULL)
     return 0;
@@ -692,7 +691,7 @@ int longueur(pgraphe_t g, chemin_t c) {
 
 int eulerien(pgraphe_t g, chemin_t c) {
   /*
-    debuggé avec : 
+    debuggé avec : gr2 (plien de chemins , a l'air de marcher) 
   */
   if(g == NULL)
     return 0;
@@ -716,7 +715,7 @@ int eulerien(pgraphe_t g, chemin_t c) {
 int hamiltonien(pgraphe_t g, chemin_t c) {
   /*
     /!\ modifie tmp /!\
-    debuggé avec : 
+    debuggé avec : gr_shed2 (plien de chemins , a l'air de marcher)
   */
   if(g == NULL)
     return 0;
@@ -730,12 +729,19 @@ int hamiltonien(pgraphe_t g, chemin_t c) {
     if(g_courant->tmp != 1)
       return 0;
   return 1;
+
+  // version non destructrice :
+  // int nb = 0;
+  // if(c.depart != NULL)
+  //   nb++;
+  // for(parc_t arc_chemin_courant = c.liste_arcs; arc_chemin_courant != NULL ; arc_chemin_courant = arc_chemin_courant->arc_suivant)
+  //   nb++;
+  // return elementaire(g,c) && nombre_sommets(g) == nb;
 }
 
 int graphe_eulerien_rec(pgraphe_t g,psommet_t actuel,pchemin_t c) {
   /*
-    A VERIF
-    debuggé avec : 
+    debuggé avec : tout les graphes
   */
   if(g == NULL || actuel == NULL)
     return 0;
@@ -754,7 +760,7 @@ int graphe_eulerien_rec(pgraphe_t g,psommet_t actuel,pchemin_t c) {
 }
 int graphe_eulerien(pgraphe_t g) {
   /*
-    debuggé avec : 
+    debuggé avec : tout les graphes
   */
   if(g == NULL)
     return 0;
@@ -770,7 +776,7 @@ int graphe_eulerien(pgraphe_t g) {
 int graphe_hamiltonien_rec(pgraphe_t g, psommet_t actuel, pchemin_t c) {
   /*
     /!\ modifie tmp ET couleur /!\
-    debuggé avec : 
+    debuggé avec : tout les graphes
   */
   if(g == NULL || actuel == NULL)
     return 0;
@@ -792,7 +798,7 @@ int graphe_hamiltonien_rec(pgraphe_t g, psommet_t actuel, pchemin_t c) {
 int graphe_hamiltonien(pgraphe_t g) {
   /*
     /!\ modifie tmp ET couleur /!\
-    debuggé avec : 
+    debuggé avec : tout les graphes
   */
   if(g == NULL)
     return 0;
@@ -808,7 +814,7 @@ int graphe_hamiltonien(pgraphe_t g) {
 void distance_min_rec(pgraphe_t g) {
   /*
     /!\ modifie tmp /!\
-    debuggé avec : gr0, gr1, gr2, gr3
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
   if(g != NULL) {
     int dist;
@@ -824,7 +830,7 @@ void distance_min_rec(pgraphe_t g) {
 void distance_min(pgraphe_t g, int r) {
   /*
     /!\ modifie tmp /!\
-    debuggé avec : gr0, gr1, gr2, gr3
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
   if(g == NULL)
     return;
@@ -839,7 +845,7 @@ void distance_min(pgraphe_t g, int r) {
 int distance(pgraphe_t g, int x, int y) {
   /*
     /!\ modifie tmp /!\
-    debuggé avec : gr0, gr1, gr2, gr4, gr3
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
   if(g == NULL)
     return 0;
@@ -856,7 +862,8 @@ int distance(pgraphe_t g, int x, int y) {
 void distance_max_rec(pgraphe_t g, psommet_t actuel, chemin_t c) {
   /*
     /!\ modifie tmp /!\
-    debuggé avec : gr0, gr1, gr2
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr6
+    erreur dans gr5 (4->2 : d=1 alors que en 2 possible)
   */
   if(actuel != NULL && g != NULL) {
     int dist;
@@ -877,7 +884,8 @@ void distance_max(pgraphe_t g, int r) {
   /*
     pire distance
     /!\ modifie tmp /!\
-    debuggé avec : gr0, gr1, gr2
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr6
+    erreur dans gr5 (4->2 : d=1 alors que en 2 possible)
   */
   if(g == NULL)
     return;
@@ -893,7 +901,7 @@ void distance_max(pgraphe_t g, int r) {
 int excentricite(pgraphe_t g, int n) {
   /*
     /!\ modifie tmp /!\
-    debuggé avec : gr0, gr1, gr2
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
 	if(g == NULL)
     return 0;
@@ -908,7 +916,7 @@ int excentricite(pgraphe_t g, int n) {
 int diametre(pgraphe_t g) {
   /*
     /!\ modifie tmp /!\
-    debuggé avec : gr0, gr1, gr2
+    debuggé avec : gr0, gr1, gr2, gr3, gr4, gr5, gr6
   */
 	if(g == NULL)
     return 0;

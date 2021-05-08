@@ -1,0 +1,32 @@
+void afficher_graphe_largeur (pgraphe_t g, int r) { // attention modifie tmp
+  /*
+    afficher les sommets du graphe avec un parcours en largeur
+  */
+  // if(g == NULL)
+  //   return;
+  // init_champ_tmp_sommet(g,-1);
+  // fap f = creer_fap_vide();
+  // g = chercher_sommet(g,r);
+  // if(g == NULL)
+  //   return;
+  // g->tmp = 0;
+  // f = inserer(f,g,0);
+  
+  // pgraphe_t gtmp; int prio;
+  // while(!est_fap_vide(f)) {
+  //   f = extraire_tete(f,&gtmp,&prio);
+  //   printf("%d ",gtmp->label);
+  //   parc_t arc_courant = gtmp->liste_arcs;
+  //   while( arc_courant != NULL) {
+  //     int dist = gtmp->tmp+arc_courant->poids;
+  //     if(arc_courant->dest->tmp == -1) { // possibilité de factorisé
+  //       arc_courant->dest->tmp = dist; // la
+  //       f = inserer(f,arc_courant->dest,dist); // la
+  //     } else if(arc_courant->dest->tmp > dist) {
+  //       f = extraire_label(f,&gtmp,&prio,arc_courant->dest->label);
+  //       arc_courant->dest->tmp = dist; // avec la
+  //       f = inserer(f,arc_courant->dest,dist); // avec la	
+  //     }
+  //   }
+  // }
+}
