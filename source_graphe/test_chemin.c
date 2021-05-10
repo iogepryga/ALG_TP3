@@ -50,24 +50,22 @@ chemin_t gen_chemin_rand_fixedsaut(pgraphe_t g, int nb_saut) {
 
 
 int main (int argc, char **argv)
-{
-  pgraphe_t g ;
+{ 
+  if (argc != 2) {
+    fprintf (stderr, "erreur parametre \n");
+    exit (-1);
+  }
   
-  if (argc != 2)
-    {
-      fprintf (stderr, "erreur parametre \n") ;
-      exit (-1) ;
-    }
-  
-  
+  pgraphe_t g;
   lire_graphe (argv [1], &g) ;
 
-  #define NB_EXPE 100
+  #define NB_EXPE 30
 
 
-  #define NB_SAUT_MAX 6
+  // #define NB_SAUT_MAX 6
   // int NB_SAUT_MAX = nombre_arcs(g); // eulerien
   // int NB_SAUT_MAX = nombre_sommets(g) - 1; // hamiltonien
+  int NB_SAUT_MAX = (nombre_sommets(g) - 1 > nombre_arcs(g)) ? nombre_sommets(g) - 1 : nombre_arcs(g); // max eulerien et hamiltonien
 
 
   init_couleur_sommet(g,0);
@@ -82,15 +80,15 @@ int main (int argc, char **argv)
   for(int i = 0 ; i < NB_EXPE ; i++){
     printf("<--------------->\n");
 
-    chemin_t ctmp = gen_chemin_rand_fixedsaut(g,NB_SAUT_MAX);
-    // chemin_t ctmp = gen_chemin_rand_fixedsaut(g,rand()%(NB_SAUT_MAX+1));
+    // chemin_t ctmp = gen_chemin_rand_fixedsaut(g,NB_SAUT_MAX);
+    chemin_t ctmp = gen_chemin_rand_fixedsaut(g,rand()%(NB_SAUT_MAX+1));
 
     print_chemin(ctmp);
-    printf("longueur ?                                   = %d\n",longueur(g,ctmp));
+    // printf("longueur ?                                   = %d\n",longueur(g,ctmp));
     printf("elementaire            (sommets distincts) ? : %d\n",elementaire(g,ctmp));
     printf("simple                      (arc distinct) ? : %d\n",simple(g,ctmp));
-    printf("eulerien       (tout les arcs et distinct) ? : %d\n",eulerien(g,ctmp)); //if(eulerien(g,ctmp))printf("LAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
-    printf("hamiltonien (tout les sommets et distinct) ? : %d\n",hamiltonien(g,ctmp));// if(hamiltonien(g,ctmp))printf("LEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE\n");
+    printf("eulerien       (tout les arcs et distinct) ? : %d\n",eulerien(g,ctmp));
+    printf("hamiltonien (tout les sommets et distinct) ? : %d\n",hamiltonien(g,ctmp));
     free_chemin(ctmp);
   }
 }
